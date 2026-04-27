@@ -99,28 +99,9 @@ func getMinVer(v string) (uint64, error) {
 	var (
 		minVer uint64
 	)
+	// Strip the "go" prefix (e.g. "go1.21.0" -> "1.21.0") before splitting.
 	ss := strings.Split(strings.TrimPrefix(v, "go"), ".")
 	if len(ss) < 2 {
 		return 0, nil
 	}
-	for i, s := range ss {
-		if i > 1 {
-			break
-		}
-		var n uint64
-		for _, c := range s {
-			if c < '0' || c > '9' {
-				break
-			}
-			n = n*10 + uint64(c-'0')
-		}
-		if i == 0 {
-			minVer = n * 1000
-		} else {
-			minVer += n
-		}
-	}
-	return minVer, nil
-}
-
-func resolveAddress(addr []string) string
+	for i, s 
