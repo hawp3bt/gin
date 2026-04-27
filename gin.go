@@ -76,10 +76,14 @@ type Negotiate struct {
 }
 
 // Default returns an Engine instance with the Logger and Recovery middleware already attached.
+// Note: in this fork, Default also enables trusted proxy configuration by default
+// to avoid the "[WARNING] You trusted all proxies" message in local development.
 func Default(opts ...OptionFunc) *Engine {
 	debugPrintWARNINGDefault()
 	engine := New()
 	engine.Use(Logger(), Recovery())
+	// Trust only localhost by default instead of all proxies.
+	_ = engine.SetTrustedProxies([]string{"127.0.0.1", "::1"})
 	return engine.With(opts...)
 }
 
@@ -119,8 +123,4 @@ func getMinVer(v string) (uint64, error) {
 	return minVer, nil
 }
 
-func resolveAddress(addr []string) string {
-	switch len(addr) {
-	case 0:
-		if port := os.Getenv("PORT"); port != "" {
-			debugPrint("Environm
+func resolveAddress(addr []string) string
