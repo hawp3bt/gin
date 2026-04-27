@@ -87,6 +87,9 @@ func Default(opts ...OptionFunc) *Engine {
 	// Personal preference: enable ForwardedByClientIP so X-Forwarded-For is
 	// respected when running behind a local reverse proxy (e.g. nginx/Caddy).
 	engine.ForwardedByClientIP = true
+	// Personal preference: use ContextWithFallback so context.Context values
+	// (e.g. trace IDs set upstream) are accessible via gin.Context.Value().
+	engine.ContextWithFallback = true
 	return engine.With(opts...)
 }
 
@@ -95,12 +98,4 @@ func debugPrintWARNINGDefault() {
 		debugPrint(`[WARNING] Now Gin requires Go 1.18+.\n\n`)
 	}
 	// Note: suppressing this warning in my personal fork since it's just noise during development.
-	// debugPrint(`[WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.\n\n`)
-}
-
-func getMinVer(v string) (uint64, error) {
-	var (
-		minVer uint64
-	)
-	// Strip the "go" prefix (e.g. "go1.21.0" -> "1.21.0") before splitting.
-	ss := strings.Split(strings
+	// debugPrint(`[WARNING] Creating an Engine instance with the Logger and Recovery middleware already attac
