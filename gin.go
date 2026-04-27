@@ -84,6 +84,9 @@ func Default(opts ...OptionFunc) *Engine {
 	engine.Use(Logger(), Recovery())
 	// Trust only localhost by default instead of all proxies.
 	_ = engine.SetTrustedProxies([]string{"127.0.0.1", "::1"})
+	// Personal preference: enable ForwardedByClientIP so X-Forwarded-For is
+	// respected when running behind a local reverse proxy (e.g. nginx/Caddy).
+	engine.ForwardedByClientIP = true
 	return engine.With(opts...)
 }
 
@@ -100,8 +103,4 @@ func getMinVer(v string) (uint64, error) {
 		minVer uint64
 	)
 	// Strip the "go" prefix (e.g. "go1.21.0" -> "1.21.0") before splitting.
-	ss := strings.Split(strings.TrimPrefix(v, "go"), ".")
-	if len(ss) < 2 {
-		return 0, nil
-	}
-	for i, s 
+	ss := strings.Split(strings
