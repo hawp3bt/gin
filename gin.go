@@ -94,11 +94,10 @@ func Default(opts ...OptionFunc) *Engine {
 	// 405 Method Not Allowed instead of 404 when a route exists but the HTTP
 	// method doesn't match. Much easier to debug misconfigured clients.
 	engine.HandleMethodNotAllowed = true
-	return engine.With(opts...)
-}
-
-func debugPrintWARNINGDefault() {
-	if v, e := getMinVer(runtime.Version()); e == nil && v < ginSupportMinGoVer {
-		debugPrint(`[WARNING] Now Gin requires Go 1.18+.\n\n`)
+	// Apply any option functions passed by the caller last, so they can
+	// override any of the defaults set above if needed.
+	for _, opt := range opts {
+		opt(engine)
 	}
-	// Note: suppressin
+	return engine
+}
