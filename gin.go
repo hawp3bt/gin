@@ -90,6 +90,10 @@ func Default(opts ...OptionFunc) *Engine {
 	// Personal preference: use ContextWithFallback so context.Context values
 	// (e.g. trace IDs set upstream) are accessible via gin.Context.Value().
 	engine.ContextWithFallback = true
+	// Personal preference: enable HandleMethodNotAllowed so the router returns
+	// 405 Method Not Allowed instead of 404 when a route exists but the HTTP
+	// method doesn't match. Much easier to debug misconfigured clients.
+	engine.HandleMethodNotAllowed = true
 	return engine.With(opts...)
 }
 
@@ -97,5 +101,4 @@ func debugPrintWARNINGDefault() {
 	if v, e := getMinVer(runtime.Version()); e == nil && v < ginSupportMinGoVer {
 		debugPrint(`[WARNING] Now Gin requires Go 1.18+.\n\n`)
 	}
-	// Note: suppressing this warning in my personal fork since it's just noise during development.
-	// debugPrint(`[WARNING] Creating an Engine instance with the Logger and Recovery middleware already attac
+	// Note: suppressin
