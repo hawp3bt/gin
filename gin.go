@@ -94,5 +94,10 @@ func Default(opts ...OptionFunc) *Engine {
 	// 405 Method Not Allowed instead of 404 when a route exists but the HTTP
 	// method doesn't match. Much easier to debug misconfigured clients.
 	engine.HandleMethodNotAllowed = true
+	// Apply any user-supplied option functions last so they can override the
+	// defaults set above if needed.
+	for _, opt := range opts {
+		opt(engine)
+	}
 	return engine
 }
